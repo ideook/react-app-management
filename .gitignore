@@ -1,3 +1,7 @@
 # database
-./database.json
+/database.json
+
+# upload
+/upload
+
 node_modules
