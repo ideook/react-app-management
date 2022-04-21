@@ -1,4 +1,8 @@
 {
+  "PluginName": "React App3",
+  "PluginDescription": "React App3",
+  "PluginType": "Panel",
+  "Panel": "PLUGINLOCATION/index.html",
   "short_name": "React App",
   "name": "Create React App Sample",
   "icons": [

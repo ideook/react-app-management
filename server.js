@@ -57,7 +57,8 @@ app.get("/api/customers", (req, res) => {
 app.use("/image", express.static("./upload"));
 
 app.post("/api/customers", upload.single("image"), (req, res) => {
-  let image = ""; // "/image/" + req.file.filename;
+  console.log(req.file);
+  let image = "/image/" + req.file.filename;
   let name = req.body.name;
   let birthday = req.body.birthday;
   let gender = req.body.gender;
@@ -77,7 +78,21 @@ app.post("/api/customers", upload.single("image"), (req, res) => {
   });
 });
 
-app.delete("/api/customers/:id", (req, res) => {
+app.post("/api/customers/:id", upload.single("image"), (req, res) => {
+  let image = "/image/" + req.file.filename;
+  let name = req.body.name;
+  let birthday = req.body.birthday;
+  let gender = req.body.gender;
+  let job = req.body.job;
+
+  var request = new sql.Request();
+  q = `UPDATE CUSTOMER SET [image] = '${image}', NAME = '${name}', birthday = '${birthday}', gender = '${gender}', job = '${job}' WHERE id = ${req.params.id}`;
+  request.query(q, (err, rows, fields) => {
+    res.send(rows.recordset);
+  });
+});
+
+app.delete("/api/customers/delete/:id", (req, res) => {
   var request = new sql.Request();
   //console.log(req.params.id);
   q = `UPDATE CUSTOMER SET isDeleted = 1 WHERE id = ${req.params.id}`;

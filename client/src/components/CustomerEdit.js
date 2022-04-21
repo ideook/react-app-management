@@ -14,16 +14,18 @@ const styles = (theme) => ({
   },
 });
 
-class CustomerAdd extends React.Component {
+class CustomerEdit extends React.Component {
   constructor(props) {
     super(props);
 
+    console.log(this.props.fileName);
+
     this.state = {
       file: null,
-      userName: "",
-      birthday: "",
-      gender: "",
-      job: "",
+      userName: this.props.name,
+      birthday: this.props.birthday,
+      gender: this.props.gender,
+      job: this.props.job,
       fileName: "",
       open: false,
     };
@@ -31,34 +33,41 @@ class CustomerAdd extends React.Component {
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.handleFileChange = this.handleFileChange.bind(this);
     this.handleValueChange = this.handleValueChange.bind(this);
-    this.addCustomer = this.addCustomer.bind(this);
+    this.editCustomer = this.editCustomer.bind(this);
     this.handleClickOpen = this.handleClickOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
   }
 
-  handleFormSubmit(e) {
+  handleFormSubmit(e, id) {
+    console.log(id);
     e.preventDefault();
-    this.addCustomer().then((response) => {
+    this.editCustomer(id).then((response) => {
       console.log(response.data);
       this.props.stateRefresh();
     });
 
     this.setState({
-      file: null,
-      userName: "",
-      birthday: "",
-      gender: "",
-      job: "",
-      fileName: "",
+      //file: null,
+      //userName: "",
+      //birthday: "",
+      //gender: "",
+      //job: "",
+      //fileName: "",
       open: false,
     });
   }
 
   handleFileChange(e) {
+    console.log(
+      e.target.value,
+      e.target.files[0].name
+    );
     this.setState({
       file: e.target.files[0],
       fileName: e.target.value,
     });
+
+    //document.getElementById(<img src={testImg} alt );
   }
 
   handleValueChange(e) {
@@ -67,12 +76,9 @@ class CustomerAdd extends React.Component {
     this.setState(nextState);
   }
 
-  addCustomer() {
-    const url = "/api/customers";
+  editCustomer(id) {
+    const url = "/api/customers/" + id;
     const formData = new FormData();
-
-    //console.log(this.state.file, " | ", this.state.fileName);
-
     formData.append("image", this.state.file);
     formData.append("name", this.state.userName);
     formData.append("birthday", this.state.birthday);
@@ -96,12 +102,12 @@ class CustomerAdd extends React.Component {
 
   handleClose() {
     this.setState({
-      file: null,
-      userName: "",
-      birthday: "",
-      gender: "",
-      job: "",
-      fileName: "",
+      //   file: null,
+      //   userName: "",
+      //   birthday: "",
+      //   gender: "",
+      //   job: "",
+      //   fileName: "",
       open: false,
     });
   }
@@ -116,11 +122,11 @@ class CustomerAdd extends React.Component {
           color="primary"
           onClick={this.handleClickOpen}
         >
-          고객 추가하기
+          수정
         </Button>
 
         <Dialog open={this.state.open} onClose={this.handleClose}>
-          <DialogTitle>고객 추가</DialogTitle>
+          <DialogTitle>고객 정보 수정</DialogTitle>
 
           <DialogContent>
             <input
@@ -132,7 +138,8 @@ class CustomerAdd extends React.Component {
               value={this.state.fileName}
               onChange={this.handleFileChange}
             />
-
+            <img src={this.props.fileName} alt="profile" />
+            <br></br>
             <label htmlFor="raised-button-file">
               <Button
                 variant="contained"
@@ -140,9 +147,7 @@ class CustomerAdd extends React.Component {
                 component="span"
                 name="file"
               >
-                {this.state.fileName === ""
-                  ? "프로필 이미지 선택"
-                  : this.state.fileName}
+                이미지 선택
               </Button>
             </label>
             <br />
@@ -185,16 +190,18 @@ class CustomerAdd extends React.Component {
               value={this.state.job}
               onChange={this.handleValueChange}
             />
-            <br />
           </DialogContent>
 
           <DialogActions>
             <Button
               variant="contained"
               color="primary"
-              onClick={this.handleFormSubmit}
+              onClick={(e) => {
+                this.handleFormSubmit(e, this.props.id);
+              }}
+              //onClick={this.handleFormSubmit(this.props.id)}
             >
-              추가
+              수정
             </Button>
 
             <Button
@@ -202,7 +209,7 @@ class CustomerAdd extends React.Component {
               color="primary"
               onClick={this.handleClose}
             >
-              닫기
+              취소
             </Button>
           </DialogActions>
         </Dialog>
@@ -211,4 +218,4 @@ class CustomerAdd extends React.Component {
   }
 }
 
-export default withStyles(styles)(CustomerAdd);
+export default withStyles(styles)(CustomerEdit);
